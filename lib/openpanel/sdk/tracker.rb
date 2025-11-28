@@ -1,14 +1,16 @@
-require "faraday"
+# frozen_string_literal: true
+
+require 'faraday'
 
 module OpenPanel
   module SDK
     class OpenPanelError < StandardError; end
 
     class Tracker
-      TRACKING_TYPE_IDENTIFY = "identify"
-      TRACKING_TYPE_TRACK = "track"
-      TRACKING_TYPE_INCREMENT = "increment"
-      TRACKING_TYPE_DECREMENT = "decrement"
+      TRACKING_TYPE_IDENTIFY = 'identify'
+      TRACKING_TYPE_TRACK = 'track'
+      TRACKING_TYPE_INCREMENT = 'increment'
+      TRACKING_TYPE_DECREMENT = 'decrement'
 
       attr_reader :headers
 
@@ -17,9 +19,9 @@ module OpenPanel
       ##############################
       def initialize
         @headers = {
-          "Content-Type" => "application/json",
-          "openpanel-client-id" => ENV["OPENPANEL_CLIENT_ID"],
-          "openpanel-client-secret" => ENV["OPENPANEL_CLIENT_SECRET"],
+          'Content-Type' => 'application/json',
+          'openpanel-client-id' => ENV['OPENPANEL_CLIENT_ID'],
+          'openpanel-client-secret' => ENV['OPENPANEL_CLIENT_SECRET']
         }
       end
 
@@ -52,9 +54,9 @@ module OpenPanel
       ##############################
       def track_page_view(user, path)
         if user
-          track "view", payload: { profileId: user.profile_id, path: path }
+          track 'view', payload: { profileId: user.profile_id, path: path }
         else
-          track "view", payload: { path: path }
+          track 'view', payload: { path: path }
         end
       end
 
@@ -64,13 +66,14 @@ module OpenPanel
       # @param user [OpenPanel::SDK::IdentifyUser] user to identify
       ##############################
       def identify(user)
-        payload = { profileId: user.profile_id, firstName: user.first_name, lastName: user.last_name, email: user.email }
+        payload = { profileId: user.profile_id, firstName: user.first_name, lastName: user.last_name,
+                    email: user.email }
         payload = { type: TRACKING_TYPE_IDENTIFY, payload: payload }
 
         send_request payload: payload
       end
 
-      def increment_property(user, property = "visits", value = 1)
+      def increment_property(user, property = 'visits', value = 1)
         payload = { profileId: user.profile_id, property: property, value: value }
         payload = { type: TRACKING_TYPE_INCREMENT, payload: payload }
 
@@ -81,7 +84,7 @@ module OpenPanel
       # Decrement property in OpenPanel
       # @param user [User] user to identify
       #############################
-      def decrement_property(user, property = "visits", value = 1)
+      def decrement_property(user, property = 'visits', value = 1)
         payload = { profileId: user.profile_id, property: property, value: value }
         payload = { type: TRACKING_TYPE_DECREMENT, payload: payload }
 
@@ -95,16 +98,16 @@ module OpenPanel
       # @param url [String] API endpoint URL
       # @param payload [Hash] request payload
       ##############################
-      def send_request(url: ENV["OPENPANEL_TRACK_URL"], payload: {})
+      def send_request(url: ENV['OPENPANEL_TRACK_URL'], payload: {})
         response = Faraday.post url, payload.to_json, @headers
 
         case response.status
         when 401
-          raise OpenPanel::SDK::OpenPanelError, "Unauthorized"
+          raise OpenPanel::SDK::OpenPanelError, 'Unauthorized'
         when 429
-          raise OpenPanel::SDK::OpenPanelError, "Too many requests"
+          raise OpenPanel::SDK::OpenPanelError, 'Too many requests'
         when 500
-          raise OpenPanel::SDK::OpenPanelError, "Internal server error"
+          raise OpenPanel::SDK::OpenPanelError, 'Internal server error'
         else
           response
         end
