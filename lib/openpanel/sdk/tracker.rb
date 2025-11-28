@@ -16,13 +16,15 @@ module OpenPanel
 
       ##############################
       # Initialize OpenPanel tracker
+      # @param disabled [Boolean] disable sending tracking events, defaults to false
       ##############################
-      def initialize
+      def initialize(disabled: false)
         @headers = {
           'Content-Type' => 'application/json',
           'openpanel-client-id' => ENV['OPENPANEL_CLIENT_ID'],
           'openpanel-client-secret' => ENV['OPENPANEL_CLIENT_SECRET']
         }
+        @disabled = disabled
       end
 
       ##############################
@@ -73,6 +75,12 @@ module OpenPanel
         send_request payload: payload
       end
 
+      ##############################
+      # Decrement property in OpenPanel
+      # @param user [User] user to identify
+      # @param property [String] property to increment
+      # @param value [Integer] value to increment by
+      #############################
       def increment_property(user, property = 'visits', value = 1)
         payload = { profileId: user.profile_id, property: property, value: value }
         payload = { type: TRACKING_TYPE_INCREMENT, payload: payload }
@@ -83,6 +91,8 @@ module OpenPanel
       ##############################
       # Decrement property in OpenPanel
       # @param user [User] user to identify
+      # @param property [String] property to increment
+      # @param value [Integer] value to decrement by
       #############################
       def decrement_property(user, property = 'visits', value = 1)
         payload = { profileId: user.profile_id, property: property, value: value }
@@ -97,8 +107,12 @@ module OpenPanel
       # Send request to OpenPanel API
       # @param url [String] API endpoint URL
       # @param payload [Hash] request payload
+      # @return [Faraday::Response] The Faraday plain response object
+      # @raise [OpenPanel::SDK::OpenPanelError] if request fails
       ##############################
       def send_request(url: ENV['OPENPANEL_TRACK_URL'], payload: {})
+        return if @disabled
+
         response = Faraday.post url, payload.to_json, @headers
 
         case response.status

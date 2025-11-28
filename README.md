@@ -16,9 +16,21 @@ If bundler is not being used to manage dependencies, install the gem by executin
 gem install openpanel-sdk
 ```
 
-## Usage
+## Usage example
 
-TODO: Write usage instructions here
+Use the gem by adding the following line to the Gemfile:
+
+```ruby
+tracker = OpenPanel::SDK::Tracker.new
+identify_user = OpenPanel::SDK::IdentifyUser.new
+
+# ... set user props
+
+tracker.identify identify_user
+tracker.track 'test_event', payload: { name: 'test' }
+tracker.increment_property identify_user, 'test_property', 1
+tracker.decrement_property identify_user, 'test_property', 1
+```
 
 ## Development
 
