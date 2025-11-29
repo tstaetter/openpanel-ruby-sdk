@@ -50,19 +50,6 @@ module OpenPanel
       end
 
       ##############################
-      # Track page view in OpenPanel
-      # @param user [User] user to track
-      # @param path [String] page path
-      ##############################
-      def track_page_view(user, path)
-        if user
-          track 'view', payload: { profileId: user.profile_id, path: path }
-        else
-          track 'view', payload: { path: path }
-        end
-      end
-
-      ##############################
       # Identify user in OpenPanel
       # https://openpanel.dev/docs/api/track
       # @param user [OpenPanel::SDK::IdentifyUser] user to identify

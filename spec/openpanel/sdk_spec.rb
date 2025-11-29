@@ -24,12 +24,6 @@ RSpec.describe OpenPanel::SDK do
 
       expect(response.status).to eq(200)
     end
-
-    it 'can track a page view' do
-      response = tracker.track_page_view(user, '/rspec')
-
-      expect(response.status).to eq(200)
-    end
   end
 
   context 'identifying users' do
