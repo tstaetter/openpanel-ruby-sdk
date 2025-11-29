@@ -30,6 +30,13 @@ RSpec.describe OpenPanel::SDK do
 
       expect(response.status).to eq(200)
     end
+
+    it 'can track with global properties' do
+      tracker = OpenPanel::SDK::Tracker.new(global_props: { sdkName: 'ruby' })
+      response = tracker.track('test_event')
+
+      expect(response.status).to eq(200)
+    end
   end
 
   context 'identifying users' do

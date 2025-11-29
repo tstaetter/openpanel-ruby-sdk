@@ -12,19 +12,21 @@ module OpenPanel
       TRACKING_TYPE_INCREMENT = 'increment'
       TRACKING_TYPE_DECREMENT = 'decrement'
 
-      attr_reader :headers
+      attr_reader :headers, :global_properties
 
       ##############################
       # Initialize OpenPanel tracker
+      # @param global_props [Hash] global properties to send with every `track` and `identify` event
       # @param disabled [Boolean] disable sending tracking events, defaults to false
       ##############################
-      def initialize(disabled: false)
+      def initialize(global_props: {}, disabled: false)
         @headers = {
           'Content-Type' => 'application/json',
           'openpanel-client-id' => ENV['OPENPANEL_CLIENT_ID'],
           'openpanel-client-secret' => ENV['OPENPANEL_CLIENT_SECRET']
         }
         @disabled = disabled
+        @global_properties = global_props
       end
 
       ##############################
@@ -44,22 +46,10 @@ module OpenPanel
       # @param payload [Hash] event payload
       ##############################
       def track(event, tracking_type: TRACKING_TYPE_TRACK, payload: {})
+        payload = global_properties.merge(payload) unless global_properties.empty?
         payload = { type: tracking_type, payload: { name: event, properties: payload } }
 
         send_request payload: payload
-      end
-
-      ##############################
-      # Track page view in OpenPanel
-      # @param user [User] user to track
-      # @param path [String] page path
-      ##############################
-      def track_page_view(user, path)
-        if user
-          track 'view', payload: { profileId: user.profile_id, path: path }
-        else
-          track 'view', payload: { path: path }
-        end
       end
 
       ##############################
@@ -68,8 +58,9 @@ module OpenPanel
       # @param user [OpenPanel::SDK::IdentifyUser] user to identify
       ##############################
       def identify(user)
+        properties = user.properties.merge(global_properties) unless global_properties.empty?
         payload = { profileId: user.profile_id, firstName: user.first_name, lastName: user.last_name,
-                    email: user.email }
+                    email: user.email, properties: properties }
         payload = { type: TRACKING_TYPE_IDENTIFY, payload: payload }
 
         send_request payload: payload
