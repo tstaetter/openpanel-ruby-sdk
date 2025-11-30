@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe OpenPanel::SDK do
   let :tracker do
-    OpenPanel::SDK::Tracker.new({ env: 'test' }, false)
+    OpenPanel::SDK::Tracker.new({ env: 'test' }, disabled: false)
   end
 
   let :user do
@@ -26,7 +26,7 @@ RSpec.describe OpenPanel::SDK do
     end
 
     it 'can track with global properties' do
-      tracker = OpenPanel::SDK::Tracker.new({ sdkName: 'ruby' }, false)
+      tracker = OpenPanel::SDK::Tracker.new({ sdkName: 'ruby' }, disabled: false)
       response = tracker.track('test_event')
 
       expect(response.status).to eq(200)
