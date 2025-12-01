@@ -7,8 +7,5 @@ gemspec
 
 # Use dotenv for environment variables
 gem 'dotenv'
-# Use Faraday for HTTP requests [https://lostisland.github.io/faraday/]
-gem 'faraday'
 
-gem 'rspec', '~> 3.0'
 gem 'rubocop', group: 'development', require: false
