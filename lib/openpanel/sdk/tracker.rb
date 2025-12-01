@@ -41,7 +41,10 @@ module OpenPanel
       # @param event [String] name of event
       # @param tracking_type [String]
       # @param payload [Hash] event payload
-      def track(event, tracking_type: TRACKING_TYPE_TRACK, payload: {})
+      # @param filter [Boolean] if true, event will NOT be sent to OpenPanel, defaults to false
+      def track(event, tracking_type: TRACKING_TYPE_TRACK, payload: {}, filter: false)
+        return if filter
+
         payload = global_properties.merge(payload) unless global_properties.empty?
         payload = { type: tracking_type, payload: { name: event, properties: payload } }
 
