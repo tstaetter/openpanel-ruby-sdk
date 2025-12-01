@@ -1,7 +1,8 @@
 PATH
   remote: .
   specs:
-    openpanel-sdk (0.2.2)
+    openpanel-sdk (0.2.3)
+      faraday
 
 GEM
   remote: https://rubygems.org/
@@ -68,7 +69,6 @@ PLATFORMS
 
 DEPENDENCIES
   dotenv
-  faraday
   openpanel-sdk!
   rspec (~> 3.0)
   rubocop
