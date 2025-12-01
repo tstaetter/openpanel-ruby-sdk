@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     openpanel-sdk (0.2.3)
-      faraday
+      faraday (~> 2.14)
 
 GEM
   remote: https://rubygems.org/

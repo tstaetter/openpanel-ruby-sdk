@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = ['Thomas Stätter <thomas.staetter@gmail.com>']
 
   spec.summary = 'OpenPanel SDK for Ruby'
-  spec.description = 'OpenPanel SDK for Ruby'
+  spec.description = 'OpenPanel SDK for Ruby implements a client for the OpenPanel backend API.'
   spec.homepage = 'https://github.com/tstaetter/openpanel-sdk'
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 3.2.0'
@@ -32,7 +32,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   # Use Faraday for HTTP requests [https://lostisland.github.io/faraday/]
-  spec.add_dependency 'faraday'
+  spec.add_dependency 'faraday', '~> 2.14'
+  # Use rspec for testing
   spec.add_development_dependency 'rspec', '~> 3.0'
 
   # For more information and examples about making a new gem, check out our
