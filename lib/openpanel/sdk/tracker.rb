@@ -41,14 +41,18 @@ module OpenPanel
       # @param event [String] name of event
       # @param tracking_type [String]
       # @param payload [Hash] event payload
-      # @param filter [Boolean] if true, event will NOT be sent to OpenPanel, defaults to false
-      def track(event, tracking_type: TRACKING_TYPE_TRACK, payload: {}, filter: false)
-        return if filter
+      # @param filter [Lambda] pass in a lambda to filter events. If the lambda returns true, the event won't be tracked.
+      # @return [Faraday::Response | nil] The Faraday plain response object or nil, if the event was filtered out
+      # @raise [OpenPanel::SDK::OpenPanelError] if the request fails or the event filter is not a method or lambda
+      def track(event, tracking_type: TRACKING_TYPE_TRACK, payload: {}, filter: ->(_payload) { false })
+        return if filter.call(payload)
 
         payload = global_properties.merge(payload) unless global_properties.empty?
         payload = { type: tracking_type, payload: { name: event, properties: payload } }
 
         send_request payload: payload
+      rescue StandardError => e
+        raise OpenPanel::SDK::OpenPanelError, e.message
       end
 
       # Identify user in OpenPanel
