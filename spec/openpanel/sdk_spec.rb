@@ -31,9 +31,14 @@ RSpec.describe OpenPanel::SDK do
 
       expect(response.status).to eq(200)
     end
+  end
 
-    it 'cannot track filtered events' do
-      response = tracker.track('test_event', payload: { name: 'test' }, filter: true)
+  context 'filtering events' do
+    it 'cannot track filtered events with lambda as filter' do
+      filter = lambda { |payload|
+        true if payload[:name] == 'test'
+      }
+      response = tracker.track('test_event', payload: { name: 'test' }, filter: filter)
 
       expect(response).to be_nil
     end
