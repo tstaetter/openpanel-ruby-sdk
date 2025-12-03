@@ -1,6 +1,6 @@
 # Openpanel::SDK
 
-OpenPanel SDK for Ruby
+[OpenPanel](https://openpanel.dev/) SDK for Ruby
 
 ## Installation
 
@@ -18,7 +18,7 @@ gem install openpanel-sdk
 
 ## Usage example
 
-Use the gem by adding the following line to the Gemfile:
+Simple example:
 
 ```ruby
 tracker = OpenPanel::SDK::Tracker.new
@@ -32,15 +32,41 @@ tracker.increment_property identify_user, 'test_property', 1
 tracker.decrement_property identify_user, 'test_property', 1
 ```
 
-## Development
+See [spec](spec) for more.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Now imagine you have a Rails app, you can add the following to your `application_controller.rb`:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```ruby
+before_action :set_openpanel_tracker
+
+protected
+
+def set_openpanel_tracker
+  @openpanel_tracker = OpenPanel::SDK::Tracker.new({ env: Rails.env.to_s }, disabled: Rails.env.development?)
+  @openpanel_tracker.set_header "x-client-ip", request.ip
+  @openpanel_tracker.set_header "user-agent", request.user_agent
+end
+```
+
+then you can use `@openpanel_tracker` in your controllers:
+
+```ruby
+@openpanel_tracker.track 'test_event', payload: { name: 'test' }
+```
+
+Don't forget to set your env vars in `.env` file:
+
+```
+OPENPANEL_TRACK_URL=https://api.openpanel.dev/track
+OPENPANEL_CLIENT_ID=<YOUR_CLIENT_ID>
+OPENPANEL_CLIENT_SECRET=<YOUR_CLIENT_SECRET>
+```
+
+as outlined in [.env_sample](.env_sample)
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/openpanel-sdk.
+Bug reports and pull requests are welcome on GitHub at https://github.com/tstaetter/openpanel-sdk.
 
 ## License
 
