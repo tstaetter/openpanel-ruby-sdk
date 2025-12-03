@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   # Use Faraday for HTTP requests [https://lostisland.github.io/faraday/]
-  spec.add_dependency 'faraday'
+  spec.add_dependency 'faraday', '~> 2.14'
   spec.add_development_dependency 'rspec', '~> 3.0'
 
   # For more information and examples about making a new gem, check out our
