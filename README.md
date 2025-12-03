@@ -87,7 +87,7 @@ as shown in [.env_sample](.env_sample)
 
 ### Filtering events
 
-Filters are used to prevent sending events to OpenPanel in certain cases.π
+Filters are used to prevent sending events to OpenPanel in certain cases.
 You can filter events by passing a `filter` lambda expression to the `track` method:
 
 ```ruby
