@@ -50,11 +50,30 @@ def set_openpanel_tracker
 end
 ```
 
-then you can use `@openpanel_tracker` in your controllers:
+then you can use `@openpanel_tracker` in your controllers to track events:
 
 ```ruby
 @openpanel_tracker.track 'test_event', payload: { name: 'test' }
 ```
+
+or to identify users:
+
+```ruby
+def identify_user_from_app_user(user, properties: {})
+  iu = OpenPanel::SDK::IdentifyUser.new
+  iu.profile_id = user.id.to_s
+  iu.email = user.email
+  iu.first_name = user.first_name
+  iu.last_name = user.last_name
+  iu.properties = properties
+
+  iu
+end
+
+iu = identify_user_from_app_user current_user
+response = @openpanel_tracker.identify iu
+# Faraday::Response
+``````
 
 Don't forget to set your env vars in `.env` file:
 
