@@ -10,13 +10,13 @@ Gem::Specification.new do |spec|
 
   spec.summary = 'OpenPanel SDK for Ruby'
   spec.description = 'OpenPanel SDK for Ruby implements a client for the OpenPanel backend API.'
-  spec.homepage = 'https://github.com/tstaetter/openpanel-sdk'
+  spec.homepage = 'https://github.com/tstaetter/openpanel-ruby-sdk'
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 3.2.0'
 
   spec.metadata['allowed_push_host'] = 'https://rubygems.org'
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = 'https://github.com/tstaetter/openpanel-sdk'
+  spec.metadata['source_code_uri'] = 'https://github.com/tstaetter/openpanel-ruby-sdk'
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -32,8 +32,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   # Use Faraday for HTTP requests [https://lostisland.github.io/faraday/]
-  spec.add_dependency 'faraday', '~> 2.14'
-  # Use rspec for testing
+  spec.add_dependency 'faraday'
   spec.add_development_dependency 'rspec', '~> 3.0'
 
   # For more information and examples about making a new gem, check out our
