@@ -18,7 +18,7 @@ gem install openpanel-sdk
 
 ## Usage example
 
-Simple example:
+### Simple example
 
 ```ruby
 tracker = OpenPanel::SDK::Tracker.new
@@ -33,6 +33,8 @@ tracker.decrement_property identify_user, 'test_property', 1
 ```
 
 See [spec](spec) for more.
+
+### Rails example
 
 Now imagine you have a Rails app, you can add the following to your `application_controller.rb`:
 
@@ -62,7 +64,20 @@ OPENPANEL_CLIENT_ID=<YOUR_CLIENT_ID>
 OPENPANEL_CLIENT_SECRET=<YOUR_CLIENT_SECRET>
 ```
 
-as outlined in [.env_sample](.env_sample)
+as shown in [.env_sample](.env_sample)
+
+### Filtering events
+
+Filters are used to prevent sending events to OpenPanel in certain cases.π
+You can filter events by passing a `filter` lambda expression to the `track` method:
+
+```ruby
+filter = lambda { |payload|
+  true if payload[:name] == 'test'
+}
+response = tracker.track('test_event', payload: { name: 'test' }, filter: filter)
+# response is nil
+``````
 
 ## Contributing
 
