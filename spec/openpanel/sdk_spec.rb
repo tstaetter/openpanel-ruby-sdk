@@ -67,4 +67,20 @@ RSpec.describe OpenPanel::SDK do
       expect(tracker.headers['test']).to eq 'test'
     end
   end
+
+  context 'revenue' do
+    it 'can track revenues' do
+      response = tracker.revenue user, 100, { currency: 'EUR' }
+
+      expect(response.status).to eq(200)
+    end
+  end
+
+  context 'device id' do
+    it 'can fetch device id' do
+      id = tracker.fetch_device_id
+
+      expect(id).to_not be_empty
+    end
+  end
 end
