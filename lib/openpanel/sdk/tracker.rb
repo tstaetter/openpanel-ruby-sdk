@@ -89,6 +89,17 @@ module OpenPanel
         send_request payload: payload
       end
 
+      # Track revenue in OpenPanel
+      # @param user [OpenPanel::SDK::IdentifyUser] user to identify
+      # @param amount [Integer] amount of revenue
+      # @param properties [Hash] additional properties to track
+      def revenue(user, amount, properties = {})
+        payload = { name: "revenue", properties: { profileId: user.profile_id, revenue: amount }.merge(properties) }
+        payload = { type: TRACKING_TYPE_TRACK, payload: payload }
+
+        send_request payload: payload
+      end
+
       private
 
       # Send request to OpenPanel API

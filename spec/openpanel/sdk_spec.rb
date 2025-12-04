@@ -67,4 +67,12 @@ RSpec.describe OpenPanel::SDK do
       expect(tracker.headers['test']).to eq 'test'
     end
   end
+
+  context 'revenue' do
+    it 'can track revenues' do
+      response = tracker.revenue user, 100, { currency: 'EUR' }
+
+      expect(response.status).to eq(200)
+    end
+  end
 end
