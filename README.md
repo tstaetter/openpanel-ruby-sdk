@@ -98,6 +98,22 @@ response = tracker.track('test_event', payload: { name: 'test' }, filter: filter
 # response is nil
 ``````
 
+### Revenue tracking
+
+Revenue tracking is done easily:
+
+```ruby
+response = tracker.revenue user, 100, { currency: 'EUR' }
+# Faraday::Response
+```
+
+If you need to add the device ID, you can fetch it from the SDK:
+
+```ruby
+device_id = tracker.device_id
+# <Some-fancy-id>
+``````
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/tstaetter/openpanel-sdk.
