@@ -75,4 +75,12 @@ RSpec.describe OpenPanel::SDK do
       expect(response.status).to eq(200)
     end
   end
+
+  context 'device id' do
+    it 'can fetch device id' do
+      id = tracker.fetch_device_id
+
+      expect(id).to_not be_empty
+    end
+  end
 end

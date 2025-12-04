@@ -100,6 +100,26 @@ module OpenPanel
         send_request payload: payload
       end
 
+      def fetch_device_id
+        return if @disabled
+
+        url = "#{ENV['OPENPANEL_TRACK_URL']}/device-id"
+        response = Faraday.get url, {}, @headers
+
+        case response.status
+        when 401
+          raise OpenPanel::SDK::OpenPanelError, 'Unauthorized'
+        when 429
+          raise OpenPanel::SDK::OpenPanelError, 'Too many requests'
+        when 500
+          raise OpenPanel::SDK::OpenPanelError, 'Internal server error'
+        else
+          JSON.parse(response.body, symbolize_names: true)[:deviceId]
+        end
+      rescue StandardError => e
+        raise OpenPanel::SDK::OpenPanelError, e.message
+      end
+
       private
 
       # Send request to OpenPanel API
