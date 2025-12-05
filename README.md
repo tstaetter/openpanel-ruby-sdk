@@ -103,7 +103,7 @@ response = tracker.track('test_event', payload: { name: 'test' }, filter: filter
 Revenue tracking is done easily:
 
 ```ruby
-response = tracker.revenue user, 100, { currency: 'EUR' }
+response = tracker.revenue user: user, amount: 100, properties: { currency: 'EUR' }
 # Faraday::Response
 ```
 
