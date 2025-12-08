@@ -27,7 +27,7 @@ identify_user = OpenPanel::SDK::IdentifyUser.new
 # ... set user props
 
 tracker.identify identify_user
-tracker.track 'test_event', payload: { name: 'test' }
+tracker.track('test_event', profile_id: profile_id, payload: { name: 'test' })
 tracker.increment_property identify_user, 'test_property', 1
 tracker.decrement_property identify_user, 'test_property', 1
 ```
@@ -53,7 +53,7 @@ end
 then you can use `@openpanel_tracker` in your controllers to track events:
 
 ```ruby
-@openpanel_tracker.track 'test_event', payload: { name: 'test' }
+@openpanel_tracker.track('test_event', profile_id: profile_id, payload: { name: 'test' })
 ```
 
 or to identify users:
