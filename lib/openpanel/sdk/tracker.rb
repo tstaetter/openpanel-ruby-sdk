@@ -95,10 +95,9 @@ module OpenPanel
       # @param amount [Integer] amount of revenue
       # @param properties [Hash] additional properties to track
       def revenue(user:, amount:, properties: {})
-        payload = { profileId: user.profile_id, name: 'revenue', properties: { __revenue: amount }.merge(properties) }
-        payload = { type: TRACKING_TYPE_TRACK, payload: payload }
+        payload = { __revenue: amount }.merge(properties)
 
-        send_request payload: payload
+        track 'revenue', profile_id: user.profile_id, payload: payload
       end
 
       def fetch_device_id
