@@ -39,16 +39,17 @@ module OpenPanel
       # Track events in OpenPanel
       # https://openpanel.dev/docs/api/track
       # @param event [String] name of event
+      # @param profile_id [String] (optional) user profile ID
       # @param tracking_type [String]
       # @param payload [Hash] event payload
       # @param filter [Lambda] pass in a lambda to filter events. If the lambda returns true, the event won't be tracked.
       # @return [Faraday::Response | nil] The Faraday plain response object or nil, if the event was filtered out
       # @raise [OpenPanel::SDK::OpenPanelError] if the request fails or the event filter is not a method or lambda
-      def track(event, tracking_type: TRACKING_TYPE_TRACK, payload: {}, filter: ->(_payload) { false })
+      def track(event, profile_id: '', tracking_type: TRACKING_TYPE_TRACK, payload: {}, filter: ->(_payload) { false })
         return if filter.call(payload)
 
         payload = global_properties.merge(payload) unless global_properties.empty?
-        payload = { type: tracking_type, payload: { name: event, properties: payload } }
+        payload = { type: tracking_type, payload: { name: event, profileId: profile_id, properties: payload } }
 
         send_request payload: payload
       rescue StandardError => e
@@ -60,9 +61,9 @@ module OpenPanel
       # @param user [OpenPanel::SDK::IdentifyUser] user to identify
       def identify(user)
         properties = user.properties.merge(global_properties) unless global_properties.empty?
-        payload = { profileId: user.profile_id, firstName: user.first_name, lastName: user.last_name,
+        payload = { firstName: user.first_name, lastName: user.last_name,
                     email: user.email, properties: properties }
-        payload = { type: TRACKING_TYPE_IDENTIFY, payload: payload }
+        payload = { type: TRACKING_TYPE_IDENTIFY, profileId: user.profile_id, payload: payload }
 
         send_request payload: payload
       end
@@ -72,8 +73,8 @@ module OpenPanel
       # @param property [String] property to increment
       # @param value [Integer] value to increment by
       def increment_property(user, property = 'visits', value = 1)
-        payload = { profileId: user.profile_id, property: property, value: value }
-        payload = { type: TRACKING_TYPE_INCREMENT, payload: payload }
+        payload = { property: property, value: value }
+        payload = { type: TRACKING_TYPE_INCREMENT, profileId: user.profile_id, payload: payload }
 
         send_request payload: payload
       end
@@ -83,8 +84,8 @@ module OpenPanel
       # @param property [String] property to increment
       # @param value [Integer] value to decrement by
       def decrement_property(user, property = 'visits', value = 1)
-        payload = { profileId: user.profile_id, property: property, value: value }
-        payload = { type: TRACKING_TYPE_DECREMENT, payload: payload }
+        payload = { property: property, value: value }
+        payload = { type: TRACKING_TYPE_DECREMENT, profileId: user.profile_id, payload: payload }
 
         send_request payload: payload
       end
@@ -94,8 +95,8 @@ module OpenPanel
       # @param amount [Integer] amount of revenue
       # @param properties [Hash] additional properties to track
       def revenue(user:, amount:, properties: {})
-        payload = { name: "revenue", properties: { profileId: user.profile_id, revenue: amount }.merge(properties) }
-        payload = { type: TRACKING_TYPE_TRACK, payload: payload }
+        payload = { name: 'revenue', properties: { revenue: amount }.merge(properties) }
+        payload = { type: TRACKING_TYPE_TRACK, profileId: user.profile_id, payload: payload }
 
         send_request payload: payload
       end

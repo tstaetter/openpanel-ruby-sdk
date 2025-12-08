@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'securerandom'
 
 RSpec.describe OpenPanel::SDK do
+  let :profile_id do
+    SecureRandom.hex(8)
+  end
+
   let :tracker do
     OpenPanel::SDK::Tracker.new({ env: 'test' }, disabled: false)
   end
@@ -10,7 +15,7 @@ RSpec.describe OpenPanel::SDK do
   let :user do
     iu = OpenPanel::SDK::IdentifyUser.new
 
-    iu.profile_id = '123123'
+    iu.profile_id = profile_id
     iu.email = 'tester@test.com'
     iu.first_name = 'Tester'
     iu.last_name = 'Test'
@@ -20,14 +25,14 @@ RSpec.describe OpenPanel::SDK do
 
   context 'tracking events' do
     it 'can track a test event' do
-      response = tracker.track('test_event', payload: { name: 'test' })
+      response = tracker.track('test_event', profile_id: profile_id, payload: { name: 'test' })
 
       expect(response.status).to eq(200)
     end
 
     it 'can track with global properties' do
       tracker = OpenPanel::SDK::Tracker.new({ sdkName: 'ruby' }, disabled: false)
-      response = tracker.track('test_event')
+      response = tracker.track('test_event', profile_id: profile_id)
 
       expect(response.status).to eq(200)
     end
@@ -38,7 +43,7 @@ RSpec.describe OpenPanel::SDK do
       filter = lambda { |payload|
         true if payload[:name] == 'test'
       }
-      response = tracker.track('test_event', payload: { name: 'test' }, filter: filter)
+      response = tracker.track('test_event', profile_id: profile_id, payload: { name: 'test' }, filter: filter)
 
       expect(response).to be_nil
     end
@@ -52,9 +57,15 @@ RSpec.describe OpenPanel::SDK do
     end
   end
 
-  context 'increment props' do
+  context 'increment/decrement props' do
     it 'can increment visits' do
       response = tracker.increment_property(user)
+
+      expect(response.status).to eq(200)
+    end
+
+    it 'can decrement visits' do
+      response = tracker.decrement_property(user)
 
       expect(response.status).to eq(200)
     end
