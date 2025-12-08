@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openpanel-sdk (0.3.1)
+    openpanel-sdk (0.3.2)
       faraday (~> 2.14)
 
 GEM

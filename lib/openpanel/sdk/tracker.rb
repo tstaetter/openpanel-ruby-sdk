@@ -73,8 +73,8 @@ module OpenPanel
       # @param property [String] property to increment
       # @param value [Integer] value to increment by
       def increment_property(user, property = 'visits', value = 1)
-        payload = { property: property, value: value, profileId: user.profile_id }
-        payload = { type: TRACKING_TYPE_INCREMENT, payload: payload }
+        payload = { property: property, value: value }
+        payload = { type: TRACKING_TYPE_INCREMENT, profileId: user.profile_id, payload: payload }
 
         send_request payload: payload
       end
@@ -84,8 +84,8 @@ module OpenPanel
       # @param property [String] property to increment
       # @param value [Integer] value to decrement by
       def decrement_property(user, property = 'visits', value = 1)
-        payload = { property: property, value: value, profileId: user.profile_id }
-        payload = { type: TRACKING_TYPE_DECREMENT, payload: payload }
+        payload = { property: property, value: value }
+        payload = { type: TRACKING_TYPE_DECREMENT, profileId: user.profile_id, payload: payload }
 
         send_request payload: payload
       end
@@ -95,7 +95,7 @@ module OpenPanel
       # @param amount [Integer] amount of revenue
       # @param properties [Hash] additional properties to track
       def revenue(user:, amount:, properties: {})
-        payload = { profileId: user.profile_id, name: 'revenue', properties: { revenue: amount }.merge(properties) }
+        payload = { profileId: user.profile_id, name: 'revenue', properties: { __revenue: amount }.merge(properties) }
         payload = { type: TRACKING_TYPE_TRACK, payload: payload }
 
         send_request payload: payload
